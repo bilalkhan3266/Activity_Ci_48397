@@ -1,0 +1,36 @@
+name: Node.js CI
+
+# When should this workflow run?
+on:
+  push:                  # whenever you push code
+    branches: [ "main" ] # only run on the main branch
+  pull_request:          # or when someone opens a pull request
+    branches: [ "main" ]
+
+# Define what jobs GitHub should do
+jobs:
+  build:                 # this is the name of the job
+    runs-on: ubuntu-latest  # GitHub will use a virtual Ubuntu machine
+
+    strategy:
+      matrix:
+        node-version: [18.x]  # Node.js version to use
+
+    steps:
+      # Step 1: Checkout your repository code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Install Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # Step 3: Install dependencies (like Jest)
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: Run your tests
+      - name: Run tests
+        run: npm test
